@@ -1,3 +1,5 @@
+all: cript_p cript
+
 cript_p: cript_p.o criptfunc.o
 	gcc cript_p.o criptfunc.o -o cript_p
 

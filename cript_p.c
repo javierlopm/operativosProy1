@@ -5,6 +5,12 @@
 #include <string.h>
 #include "criptfunc.h"
 
+/*Funcion que sustituye el truncado de c por redondeo hacia arriba*/
+int divRoundClosest(int n, int d)
+{
+  return ((n < 0) ^ (d < 0)) ? ((n - d/2)/d) : ((n + d/2)/d);
+}
+
 int main(int argc, char const *argv[])
 {
     pid_t ramas,hojas;
@@ -80,7 +86,7 @@ int main(int argc, char const *argv[])
                 }
                 else{
                     cotaInfHojas  = cotaSupHojas + 1;
-                    cotaSupHojas += largoArchivo/(nHijos * nHijos);
+                    cotaSupHojas += divRoundClosest(largoArchivo,(nHijos * nHijos));
                     if (cotaSupHojas > largoArchivo) cotaSupHojas = largoArchivo;
                     nArchHojas   ++;
                 }
@@ -102,7 +108,9 @@ int main(int argc, char const *argv[])
                 for(i=0;i<cotaSupHojas-cotaInfHojas+1;i++){
                     fread(&contenidoActual[i],1,1,entrada);
                     //printf("%c\n",contenidoActual[i]);
-                    if (strcmp(argv[1],"-c")==0) cesarizar(&contenidoActual[i]);
+                    if  (strcmp(argv[1],"-c")==0) {
+                        cesarizar(&contenidoActual[i]);
+                    }
                     else if (strcmp(argv[1],"-d")==0){
                         desmurcielagisar(&contenidoActual[i]);
                     }
@@ -124,6 +132,7 @@ int main(int argc, char const *argv[])
                 //*aux = (char) nArchHojas;
 
                 escritor = fopen( nombreArchivo ,"w");
+
 
                 //printf("Hey soy una hoja y acabo de crear un archivo\n");
 
