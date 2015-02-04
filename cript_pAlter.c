@@ -124,7 +124,7 @@ int main(int argc, char const *argv[])
         largoArchivo = ftell(entrada); // get current file pointer
         fseek(entrada, 0, SEEK_SET); // seek back to beginning of file
         // proceed with allocating memory and reading the file
-        printf("%d \n",largoArchivo);
+        //printf("%d \n",largoArchivo);
         
         fclose(entrada);
     
@@ -174,6 +174,7 @@ int main(int argc, char const *argv[])
                 if (hojas == 0) {
                     //printf("Soy hoja con pid %d de la rama: %d\n", getpid(),getppid());
                     //sleep(10);
+                    //printf("Soy la rama de nombre %d \n",nArchHojas);
                     break;
                 }
                 else{
@@ -186,27 +187,36 @@ int main(int argc, char const *argv[])
             
             if (hojas == 0){//Si soy hojas cesarizar
 
-                contenidoActual = (char *) calloc(cotaSupHojas-cotaInfHojas+1,sizeof(char));
+
+                contenidoActual = (char *) calloc(cotaSupHojas-cotaInfHojas+2,sizeof(char));
                 
                 //printf("cesar entre %d y %d \n",cotaInfHojas,cotaSupHojas);
 
                 entrada = fopen(argv[3],"r");
 
-                for(i=cotaInfHojas;i<cotaSupHojas;i++){
+                //printf("Bueno yo trabajo entre %d y %d \n",cotaInfHojas,cotaSupHojas);
+
+                //for(i=cotaInfHojas;i<cotaSupHojas-1;i++){
+                fseek(entrada,cotaInfHojas,SEEK_SET);
+                for(i=0;i<cotaSupHojas-cotaInfHojas+1;i++){
                     fread(&contenidoActual[i],1,1,entrada);
+                    //printf("%c\n",contenidoActual[i]);
                     cesarizar(&contenidoActual[i]);
                 }
+                fseek(entrada, 0, SEEK_SET);
 
-                fclose(entrada);
-                //fclose(entrada);//Maybe jejeps
+                //printf("Sali! \n");
+                printf("Yo imprimo %s \n",contenidoActual);
+
+                //fclose(entrada); No entiendo por que se queja de esta clausura
+                //printf("Cerre!\n");
     
                 nombreArchivo = (char *) calloc(4,sizeof(char));
                 nombreArchivo[0] = (char) (nArchRamas + 0x30);
                 nombreArchivo[1] = (char) (nArchHojas + 0x30);
                 nombreArchivo[2] = 'h';
 
-                //printf("%s \n",nombreArchivo);
-                
+                //printf("Mi archivo creado es el %s \n",nombreArchivo);
                 //*aux = (char) nArchHojas;
 
                 escritor = fopen( nombreArchivo ,"w");
@@ -281,10 +291,9 @@ int main(int argc, char const *argv[])
 
                 //printf("Ya estoy uniendo todo, creo...\n");
                 nombreArchivo = (char*) malloc(sizeof(char));
-
                 *nombreArchivo = (char) (i + 0x30);
 
-                printf("%s\n",nombreArchivo);
+                //printf("%s\n",nombreArchivo);
 
                 entrada = fopen( nombreArchivo,"r");
 
@@ -296,10 +305,10 @@ int main(int argc, char const *argv[])
                 largoArchivo = ftell(entrada); // get current file pointer
                 fseek(entrada, 0, SEEK_SET); // seek back to beginning of file
                 // proceed with allocating memory and reading the file
-                printf("%d \n",largoArchivo);
+                //printf("%d \n",largoArchivo);
                 
                 //Leer
-                contenidoActual = (char *) calloc(largoArchivo,sizeof(char));
+                contenidoActual = (char *) calloc(largoArchivo+1,sizeof(char));
 
                 fscanf(entrada,"%s",contenidoActual);
                 fprintf(escritor,"%s",contenidoActual);
