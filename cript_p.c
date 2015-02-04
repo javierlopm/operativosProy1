@@ -3,106 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-void cesarizar(char *c){
-    if (*c == 121){
-        *c = 'a';
-        //printf("%s",c);
-    }
-    else if (*c == 0x7A){
-        *c = 'b';
-        //printf("%s",c);
-    }
-    else{
-        *c = *c + 2;
-        //printf("%s",c);
-    }
-}
-
-void descesarizar(char *c){
-    if (*c == 97){
-        *c = 'y';
-        //printf("%s",c);
-    }
-    else if (*c == 98){
-        *c = 'z';
-        //printf("%s",c);
-    }
-    else{
-        *c = *c - 2;
-        //printf("%s",c);
-    }
-}
-
-void murcielagisar(char *c){
-    switch(*c){
-        case 'm':
-            *c = 0x30;
-            break;
-        case 'u':
-            *c = 0x31;
-            break;
-        case 'r':
-            *c = 0x32;
-            break;
-        case 'c':
-            *c = 0x33;
-            break;
-        case 'i':
-            *c = 0x34;
-            break;
-        case 'e':
-            *c = 0x35;
-            break;
-        case 'l':
-            *c = 0x36;
-            break;
-        case 'a':
-            *c = 0x37;
-            break;
-        case 'g':
-            *c = 0x38;
-            break;
-        case 'o':
-            *c = 0x39;
-            break;
-    }
-}
-
-void desmurcielagisar(char *c){
-    switch(*c){
-        case 48:
-            *c = 'm';
-            break;
-        case 49:
-            *c = 'u';
-            break;
-        case 50:
-            *c = 'r';
-            break;
-        case 51:
-            *c = 'c';
-            break;
-        case 52:
-            *c = 'i';
-            break;
-        case 53:
-            *c = 'e';
-            break;
-        case 54:
-            *c = 'l';
-            break;
-        case 55:
-            *c = 'a';
-            break;
-        case 56:
-            *c = 'g';
-            break;
-        case 57:
-            *c = 'o';
-            break;
-    }
-}
+#include "criptfunc.h"
 
 int main(int argc, char const *argv[])
 {
@@ -114,7 +15,7 @@ int main(int argc, char const *argv[])
 
     nHijos = atoi(argv[2]);
 
-    if(strcmp(argv[1],"-c")==0){
+    
 
         //printf("EH........\n");
 
@@ -201,17 +102,20 @@ int main(int argc, char const *argv[])
                 for(i=0;i<cotaSupHojas-cotaInfHojas+1;i++){
                     fread(&contenidoActual[i],1,1,entrada);
                     //printf("%c\n",contenidoActual[i]);
-                    cesarizar(&contenidoActual[i]);
+                    if (strcmp(argv[1],"-c")==0) cesarizar(&contenidoActual[i]);
+                    else if (strcmp(argv[1],"-d")==0){
+                        desmurcielagisar(&contenidoActual[i]);
+                    }
                 }
                 fseek(entrada, 0, SEEK_SET);
 
                 //printf("Sali! \n");
-                printf("Yo imprimo %s \n",contenidoActual);
+                //printf("Yo imprimo %s \n",contenidoActual);
 
                 //fclose(entrada); No entiendo por que se queja de esta clausura
                 //printf("Cerre!\n");
     
-                nombreArchivo = (char *) calloc(4,sizeof(char));
+                nombreArchivo    = (char *) calloc(4,sizeof(char));
                 nombreArchivo[0] = (char) (nArchRamas + 0x30);
                 nombreArchivo[1] = (char) (nArchHojas + 0x30);
                 nombreArchivo[2] = 'h';
@@ -265,14 +169,21 @@ int main(int argc, char const *argv[])
                     fscanf(entrada,"%s",contenidoActual);
     
                     for (j = 0; j < largoArchivo; j++){
-                        murcielagisar(&contenidoActual[i]);
+                        if (strcmp(argv[1],"-c")==0) {
+                            murcielagisar(&contenidoActual[i]);
+                        }
+                        else if(strcmp(argv[1],"-d")==0){
+                            descesarizar(&contenidoActual[i]);
+                        }
                     }
 
                     //printf("Hola soy el sr. rama y termine mi archivo\n");
     
                     fprintf(escritor,"%s",contenidoActual);
-    
+
+                    remove(nombreArchivo);
                     fclose(entrada);
+                    
                     free(nombreArchivo);
                     free(contenidoActual);
                     
@@ -297,7 +208,7 @@ int main(int argc, char const *argv[])
 
                 entrada = fopen( nombreArchivo,"r");
 
-                free(nombreArchivo);
+                
 
                 
                 largoArchivo = 0;
@@ -312,15 +223,17 @@ int main(int argc, char const *argv[])
 
                 fscanf(entrada,"%s",contenidoActual);
                 fprintf(escritor,"%s",contenidoActual);
+
+                remove(nombreArchivo);
     
-                //fclose(entrada);
-                //free(nombreArchivo);
-                free(contenidoActual);
-    
+                fclose(entrada);
+
+                free(nombreArchivo);
+                //free(contenidoActual);
             }
             fclose(escritor);
         }
-    }
+    
         
             
         
