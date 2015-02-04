@@ -113,7 +113,6 @@ int main(int argc, char const *argv[])
     FILE *escritor,*entrada;
 
     nHijos = atoi(argv[2]);
-    printf("Aqui estuve \n");
 
     if(strcmp(argv[1],"-c")==0){
 
@@ -180,7 +179,7 @@ int main(int argc, char const *argv[])
                 else{
                     cotaInfHojas  = cotaSupHojas + 1;
                     cotaSupHojas += largoArchivo/(nHijos * nHijos);
-                    if (cotaSupHojas > largoArchivo) cotaSupHojas = largoArchivo-1;
+                    if (cotaSupHojas > largoArchivo) cotaSupHojas = largoArchivo;
                     nArchHojas   ++;
                 }
             }
@@ -201,7 +200,7 @@ int main(int argc, char const *argv[])
                 fclose(entrada);
                 //fclose(entrada);//Maybe jejeps
     
-                nombreArchivo = (char *) calloc(3,sizeof(char));
+                nombreArchivo = (char *) calloc(4,sizeof(char));
                 nombreArchivo[0] = (char) (nArchRamas + 0x30);
                 nombreArchivo[1] = (char) (nArchHojas + 0x30);
                 nombreArchivo[2] = 'h';
@@ -251,7 +250,8 @@ int main(int argc, char const *argv[])
                     //printf("%d \n",largoArchivo);
     
                     //Leer
-                    contenidoActual = (char *) calloc(largoArchivo,sizeof(char));
+                    contenidoActual = (char *) calloc(largoArchivo+1,sizeof(char));
+
                     fscanf(entrada,"%s",contenidoActual);
     
                     for (j = 0; j < largoArchivo; j++){
@@ -288,25 +288,29 @@ int main(int argc, char const *argv[])
 
                 entrada = fopen( nombreArchivo,"r");
 
-                printf("%p\n",entrada);
-
                 free(nombreArchivo);
-    
+
+                
                 largoArchivo = 0;
                 fseek(entrada, 0, SEEK_END); // seek to end of file
                 largoArchivo = ftell(entrada); // get current file pointer
                 fseek(entrada, 0, SEEK_SET); // seek back to beginning of file
                 // proceed with allocating memory and reading the file
-                //printf("%d \n",largoArchivo);
-    
+                printf("%d \n",largoArchivo);
+                
                 //Leer
                 contenidoActual = (char *) calloc(largoArchivo,sizeof(char));
+
+                //printf("About to print\n");
+
                 fscanf(entrada,"%s",contenidoActual);
+
+                printf("Acabo de hacer el escan de %s \n",contenidoActual);
     
                 fprintf(escritor,"%s",contenidoActual);
     
                 //fclose(entrada);
-                free(nombreArchivo);
+                //free(nombreArchivo);
                 free(contenidoActual);
     
             }
