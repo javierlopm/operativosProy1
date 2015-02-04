@@ -301,12 +301,7 @@ int main(int argc, char const *argv[])
                 //Leer
                 contenidoActual = (char *) calloc(largoArchivo,sizeof(char));
 
-                //printf("About to print\n");
-
                 fscanf(entrada,"%s",contenidoActual);
-
-                printf("Acabo de hacer el escan de %s \n",contenidoActual);
-    
                 fprintf(escritor,"%s",contenidoActual);
     
                 //fclose(entrada);
