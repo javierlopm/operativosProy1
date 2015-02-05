@@ -156,8 +156,8 @@ void *hilosMedios(void *arg){
         }
 
         //Verificamos tam del ultimo String
-        tam = (dataInferior[i]).tamString;      //Aqui me quede a las 3 am
-        strLectura = (dataInferior[i]).string;
+        tam        = (comunicadorHijos[i])->tamString;      //Aqui me quede a las 3 am
+        strLectura = (comunicadorHijos[i])->string;
 
         //Realizamos el trabajo de criptografia sobre el texto modificado
         for(j=0;j<tam;j++){
