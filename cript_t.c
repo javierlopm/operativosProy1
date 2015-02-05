@@ -11,6 +11,13 @@
 pthread_mutex_t hiloInf = PTHREAD_MUTEX_INITIALIZER;
 int nHilos;
 int longArchivo;
+char const *argv[];
+
+/*Funcion que sustituye el truncado de c por redondeo hacia arriba*/
+int divRoundClosest(int n, int d)
+{
+  return ((n < 0) ^ (d < 0)) ? ((n - d/2)/d) : ((n + d/2)/d);
+}
 
 typedef struct dataInferior{
     int idHilo;                      //Identificador del hilo Inferior
@@ -26,8 +33,46 @@ typedef struct dataInferior{
 
 typedef struct dataMedia{
     int idHilo;               //Identificador del hilo Medio
+    int limite;
     char *string;             //Apuntador al string modificado
 }dataMedia;
+
+void *hilosInferiores(void *arg){
+    int cotaInf,cotaSup;
+    int i;
+    dataInferior *dataArg;
+    char *contenidoActual;
+    FILE *entrada;
+
+    dataArg = (dataInferior*) arg;
+
+    cotaInf = dataArg->cotaInfString;
+    cotaSup = dataArg->cotaSupString;
+
+    contenidoActual = (char *) calloc(cotaSup-cotaInf+2,sizeof(char));
+
+    
+
+    entrada = fopen(argv[3],"r");
+
+    fseek(entrada,cotaInf,SEEK_SET);
+    for(i=0;i<cotaSup-cotaInf+1;i++){
+        fread(&contenidoActual[i],1,1,entrada);
+        //printf("%c\n",contenidoActual[i]);
+        if  (strcmp(argv[1],"-c")==0) {
+            cesarizar(&contenidoActual[i]);
+        }
+        else if (strcmp(argv[1],"-d")==0){
+            desmurcielagisar(&contenidoActual[i]);
+        }
+    }
+    fseek(entrada, 0, SEEK_SET);
+
+    fclose(entrada);
+
+    (dataArg)->string = contenidoActual;
+
+}
 
 
 /* 
@@ -59,31 +104,29 @@ void *hilosMedios(void *arg){
 
     contactoMain = *((dataMedia*) (arg));
 
-    limite = 0; //No puede ser  0 SE DEBE PASAR POR ARGUMENTOOOOOOOOOOOOOOOOOOOOOOO
-    
-
+    limite = (*((dataMedia*)arg)).limite;
 
     arregloHilos = (pthread_t *) malloc(nHilos * sizeof(pthread_t));
-    dataInferior = (dataInferior**) malloc(nHilos * sizeof(dataInferior*));
+    comunicadorHijos = (dataInferior**) malloc(nHilos * sizeof(dataInferior*));
 
     for(i=0;i<nHilos;i++){
         //Creacion de las estructuras de informacion para los nuevos threads
 
-        *comunicadorHijos[i] = (dataInferior*) malloc(sizeof(dataInferior));
+        comunicadorHijos[i] = (dataInferior*) malloc(sizeof(dataInferior));
 
         //Asignacion de limites de trabajo de los hilos inferiores
-        (*comunicadorHijos[i])->cotaInfString = limite;
-        limite +=  divRoundClosest(largoArchivo,(nHilos * nHilos));
-        (*comunicadorHijos[i])->cotaSupString = limite;
+        (comunicadorHijos[i])->cotaInfString = limite;
+        limite +=  divRoundClosest(longArchivo,(nHilos * nHilos));
+        (comunicadorHijos[i])->cotaSupString = limite;
         limite++;
 
         //Asignacion del tam inicial del string,se reducira luego en cada espaci
         tam = ( 
-                (*comunicadorHijos[i])->cotaSupString - 
-                (*comunicadorHijos[i])->cotaInfString 
+                (comunicadorHijos[i])->cotaSupString - 
+                (comunicadorHijos[i])->cotaInfString 
               );
 
-        (*comunicadorHijos[i])->tamString = tam;
+        (comunicadorHijos[i])->tamString = tam;
 
 
 
@@ -93,7 +136,7 @@ void *hilosMedios(void *arg){
                                 comunicadorHijos[i]
                                 );
 
-        if (estado)) {
+        if (estado) {
             printf("Error en la creacion del hilo inferior!\n");
             abort();
         }
@@ -106,15 +149,15 @@ void *hilosMedios(void *arg){
 
     for (i=0; i< nHilos;i++){
         //Esperar por la finalizacion del primer thread
-        estado = pthread_join(*arregloHilos[i],NULL);
+        estado = pthread_join(arregloHilos[i],NULL);
         if (estado){
             printf("Error, en la ejecucion del hilo!\n");
             abort();
         }
 
         //Verificamos tam del ultimo String
-        tam = (*dataInferior[i])->tamString;
-        strLectura = (*dataInferior[i])->string;
+        tam = (dataInferior[i]).tamString;      //Aqui me quede a las 3 am
+        strLectura = (dataInferior[i]).string;
 
         //Realizamos el trabajo de criptografia sobre el texto modificado
         for(j=0;j<tam;j++){
@@ -131,47 +174,17 @@ void *hilosMedios(void *arg){
 
 }
 
-void *hilosInferiores(void *arg){
-    int cotaInf,cotaSup;
-    dataInferior *dataArg;
-    char *contenidoActual;
 
-    dataArg = (*dataInferior) arg;
 
-    cotaInf = (*dataArg)->cotaInfString;
-    cotaSup = (*dataArg)->cotaSupString;
-
-    contenidoActual = (char *) calloc(cotaSup-cotaInf+2,sizeof(char))
-
-    
-
-    entrada = fopen(argv[3],"r");
-
-    fseek(entrada,cotaInf,SEEK_SET);
-    for(i=0;i<cotaSup-cotaInf+1;i++){
-        fread(&contenidoActual[i],1,1,entrada);
-        //printf("%c\n",contenidoActual[i]);
-        if  (strcmp(argv[1],"-c")==0) {
-            cesarizar(&contenidoActual[i]);
-        }
-        else if (strcmp(argv[1],"-d")==0){
-            desmurcielagisar(&contenidoActual[i]);
-        }
-    }
-    fseek(entrada, 0, SEEK_SET);
-
-    fclose(entrada);
-
-    (*dataArg)->string = entrada;
-
-}
-
-int main(int argc, char const *argv[]){
+int main(int argc, argv){
     
     pthread_t *arregloHilos;
 
     int i;
     int limInf;
+    int estado;
+
+    FILE *entrada;
 
     dataMedia **comunicadorHijos;
 
@@ -191,21 +204,21 @@ int main(int argc, char const *argv[]){
     fseek(entrada, 0, SEEK_SET); // seek back to beginning of file
     fclose(entrada);
 
-    limtInf = 0;
+    limInf = 0;
 
     for(i=0;i<nHilos;i++){
         //Aqui creo las nuevas estructuras para cada thread
         comunicadorHijos[i] = (comunicadorHijos*) malloc(sizeof(comunicadorHijos));
 
-        (*comunicadorHijos[i])->limite = limInf;
+        (comunicadorHijos[i])->limite = limInf;
 
-        limInf +=  divRoundClosest(largoArchivo, nHilos);
+        limInf +=  divRoundClosest(longArchivo, nHilos);
 
         estado = pthread_create(
                         &arregloHilos[i], NULL, hilosInferiores,
                         comunicadorHijos[i]
                                );
-        if (estado)) {
+        if (estado) {
             printf("Error en la creacion del hilo medio!\n");
             abort();
         }
@@ -216,7 +229,7 @@ int main(int argc, char const *argv[]){
 
     for (i=0; i< nHilos;i++){
         //Esperar por la finalizacion del primer thread
-        estado = pthread_join(*arregloHilos[i],NULL);
+        estado = pthread_join(arregloHilos[i],NULL);
         if (estado){
             printf("Error, en la ejecucion del hilo!\n");
             abort();
@@ -224,8 +237,8 @@ int main(int argc, char const *argv[]){
 
         //Agregar al archivo el contenido de cada hijo finalizado siguiendo
         //el orden dado
-        fprintf(salida,"%s", (*dataMedia[i])->string );
-        free ((*comunicadorHijos[i])->string);
+        fprintf(salida,"%s", (*comunicadorHijos[i]).string );
+        free ((*comunicadorHijos[i]).string);
 
     }
 
