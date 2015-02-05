@@ -2,7 +2,7 @@ all: cript_p cript cript_t
 
 
 cript_t: cript_t.o criptfunc.o
-	gcc cript_t.o criptfunc.o -o cript_t -lphthread
+	gcc cript_t.o criptfunc.o -o cript_t -lpthread
 
 cript_p: cript_p.o criptfunc.o
 	gcc cript_p.o criptfunc.o -o cript_p
@@ -13,7 +13,7 @@ cript: cript.o criptfunc.o
 
 
 cript_t.o:  cript_t.c criptfunc.h
-	gcc -c cript_t.c
+	gcc -c cript_t.c -lpthread
 
 cript_p.o:  cript_p.c criptfunc.h
 	gcc -c cript_p.c
