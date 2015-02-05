@@ -11,7 +11,7 @@
 pthread_mutex_t hiloInf = PTHREAD_MUTEX_INITIALIZER;
 int nHilos;
 int longArchivo;
-char *opcionCript,*strEntrada,*strSalida;
+char opcionCript[30],strEntrada[30],strSalida[30];
 
 /*Funcion que sustituye el truncado de c por redondeo hacia arriba*/
 int divRoundClosest(int n, int d)
@@ -97,10 +97,10 @@ void *hilosMedios(void *arg){
 
     dataMedia contactoMain;
 
-
-
     //Estructuras para comunicarse con los thread inferiores
     dataInferior **comunicadorHijos;
+
+
 
     contactoMain = *((dataMedia*) (arg));
 
@@ -176,7 +176,7 @@ void *hilosMedios(void *arg){
 
 
 
-int main(int argc, char *argv[]){
+int main(int argc, char const *argv[]){
     
     pthread_t *arregloHilos;
 
@@ -188,15 +188,14 @@ int main(int argc, char *argv[]){
 
     dataMedia **comunicadorHijos;
 
+    printf("Iniciando \n");
+
     comunicadorHijos = (dataMedia**) malloc(nHilos * sizeof(dataMedia*));
 
-    opcionCript = argv[1];
-    nHilos      = atoi(argv[2]);
-    strEntrada  = argv[3];
-    strSalida   = argv[4];
-    
-
-    
+    strcpy(opcionCript,argv[1]);
+    nHilos =     atoi(argv[2]);
+    strcpy(strEntrada ,argv[3]);
+    strcpy(strSalida  ,argv[4]);
 
     //Iniciamos tantos hilos como indique arg2
     
