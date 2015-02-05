@@ -191,6 +191,7 @@ int main(int argc, char const *argv[]){
     printf("Iniciando \n");
 
     comunicadorHijos = (dataMedia**) malloc(nHilos * sizeof(dataMedia*));
+    
 
     strcpy(opcionCript,argv[1]);
     nHilos =     atoi(argv[2]);
@@ -201,6 +202,7 @@ int main(int argc, char const *argv[]){
     
 
     entrada = fopen(argv[3],"r");
+
     fseek(entrada, 0, SEEK_END); // seek to end of file
     longArchivo = ftell(entrada); // get current file pointer
     fseek(entrada, 0, SEEK_SET); // seek back to beginning of file
@@ -208,30 +210,31 @@ int main(int argc, char const *argv[]){
 
     limInf = 0;
 
+    arregloHilos = (pthread_t*) malloc(nHilos * sizeof(pthread_t));
+
     for(i=0;i<nHilos;i++){
         //Aqui creo las nuevas estructuras para cada thread
         comunicadorHijos[i] = (dataMedia*) malloc(sizeof(comunicadorHijos));
-
         (comunicadorHijos[i])->limite = limInf;
-
         limInf +=  divRoundClosest(longArchivo, nHilos);
 
         estado = pthread_create(
-                        &arregloHilos[i], NULL, hilosInferiores,
-                        comunicadorHijos[i]
+                        &arregloHilos[i], NULL, hilosMedios,
+                        (void*)comunicadorHijos[i]
                                );
+
         if (estado) {
             printf("Error en la creacion del hilo medio!\n");
             abort();
         }
     }
-
-
+    
     salida = fopen(strSalida,"w");
 
     for (i=0; i< nHilos;i++){
         //Esperar por la finalizacion del primer thread
         estado = pthread_join(arregloHilos[i],NULL);
+
         if (estado){
             printf("Error, en la ejecucion del hilo!\n");
             abort();
@@ -239,11 +242,14 @@ int main(int argc, char const *argv[]){
 
         //Agregar al archivo el contenido de cada hijo finalizado siguiendo
         //el orden dado
-        fprintf(salida,"%s", (*comunicadorHijos[i]).string );
+        printf("Por imprimir\n");
+        printf("%p\n",(*comunicadorHijos[i]).string );
+        fprintf(salida,"%s", (*comunicadorHijos[i]).string );  //Hijo vacio
+        printf("Impreso\n");
         free ((*comunicadorHijos[i]).string);
+        printf("Liberado\n");
 
     }
-
     fclose(salida);
 
 }
