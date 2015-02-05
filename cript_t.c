@@ -100,7 +100,7 @@ void *hilosMedios(void *arg){
     //Estructuras para comunicarse con los thread inferiores
     dataInferior **comunicadorHijos;
 
-
+    printf("Soy un hilo medio\n");
 
     contactoMain = *((dataMedia*) (arg));
 
@@ -242,7 +242,7 @@ int main(int argc, char const *argv[]){
 
         //Agregar al archivo el contenido de cada hijo finalizado siguiendo
         //el orden dado
-        printf("Por imprimir\n");
+        //printf("Por imprimir\n");
         printf("%p\n",(*comunicadorHijos[i]).string );
         fprintf(salida,"%s", (*comunicadorHijos[i]).string );  //Hijo vacio
         printf("Impreso\n");
