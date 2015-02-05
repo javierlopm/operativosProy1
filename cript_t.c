@@ -76,7 +76,6 @@ void *hilosInferiores(void *arg){
         }
     }
 
-    printf("%s\n",contenidoActual);
     /*
     for(i=0;i<cotaSup-cotaInf+1;i++){
         fread(&contenidoActual[i],1,1,entrada);
@@ -194,17 +193,25 @@ void *hilosMedios(void *arg){
         //printf("Tam %d\n",tam);
         //printf("Con contenido %s\n",strLectura);
 
+        //printf("%s\n",strLectura);
+
         //Realizamos el trabajo de criptografia sobre el texto modificado
         for(j=0;j<tam;j++){
-            if (strcmp(opcionCript,"-c")==0) murcielagisar(&strLectura[i]);
-            else if (strcmp(opcionCript,"-d")==0) descesarizar(&strLectura[i]);
+            if (strcmp(opcionCript,"-c")==0) murcielagisar(&strLectura[j]);
+            else if (strcmp(opcionCript,"-d")==0) descesarizar(&strLectura[j]);
         }
+
+        printf("%s\n",strLectura);
 
         if (i==0)strcpy(strSalida,strLectura);
         else strcat(strSalida,strLectura);
 
         free(strLectura);
     }
+
+    //printf("Esto es lo que estoy asginando %s\n",strSalida);
+    //printf("Esto fue lo que quedo %s\n", contactoMain.string);
+    ((dataMedia*) arg)->string = strSalida;
 
 
 }
@@ -225,7 +232,7 @@ int main(int argc, char const *argv[]){
 
     dataMedia **comunicadorHijos;
 
-    printf("Iniciando \n");
+    char *token;
 
     comunicadorHijos = (dataMedia**) malloc(nHilos * sizeof(dataMedia*));
     
@@ -283,8 +290,18 @@ int main(int argc, char const *argv[]){
         //Agregar al archivo el contenido de cada hijo finalizado siguiendo
         //el orden dado
         //printf("Por imprimir\n");
-        printf("%p\n",(*comunicadorHijos[i]).string );
-        fprintf(salida,"%s", (*comunicadorHijos[i]).string );  //Hijo vacio
+
+        printf("Voya imprimir... %s \n",comunicadorHijos[i]->string);
+
+        token = strtok((*comunicadorHijos[i]).string,"\"");
+
+        while(token){
+            fprintf(salida,"%s", token);
+            printf("%s", token);
+            token = strtok(NULL, "\"");
+        }
+
+          //Hijo vacio
         printf("Impreso\n");
         free ((*comunicadorHijos[i]).string);
         printf("Liberado\n");

@@ -177,10 +177,10 @@ int main(int argc, char const *argv[])
     
                     for (j = 0; j < largoArchivo; j++){
                         if (strcmp(argv[1],"-c")==0) {
-                            murcielagisar(&contenidoActual[i]);
+                            murcielagisar(&contenidoActual[j]);
                         }
                         else if(strcmp(argv[1],"-d")==0){
-                            descesarizar(&contenidoActual[i]);
+                            descesarizar(&contenidoActual[j]);
                         }
                     }
 

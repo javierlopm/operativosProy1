@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 void cesarizar(char *c){
     if (*c == 121){
         *c = 'a';
@@ -61,6 +63,7 @@ void murcielagisar(char *c){
             *c = 0x39;
             break;
     }
+    //printf("en %c \n",c);
 }
 
 void desmurcielagisar(char *c){
