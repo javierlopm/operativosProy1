@@ -25,7 +25,7 @@ typedef struct dataInferior{
 typedef struct dataMedia{
     int idHilo;                      //Identificador del hilo Medio
     char *cotaInfString;             //Apuntador al string modificado
-}dataInferior;
+}dataMedia;
 
 
 /* 
@@ -33,18 +33,49 @@ typedef struct dataMedia{
  *   necesaria para que cada thread inferior pueda trabajar
  */
 void *hilosMedios(void *arg){
-    //Encriptamos o desencriptamos de acuerdo a 
+    //Arreglo de hilos
+    pthread_t *arregloHilos;
+
+    //Candados de thread
     pthread_mutex_t hiloInf = PTHREAD_MUTEX_INITIALIZER; //Sem hilos med e inf
-    pthread_cond_t  cond = PTHREAD_COND_INITIALIZER;
+    pthread_cond_t  cond    = PTHREAD_COND_INITIALIZER;
+
+    int estado; // Estado resultante de creacion de cada thread
+
+    //Estructuras para comunicarse con los thread inferiores
+    dataInferior **comunicadorHijos;
+
+    arregloHilos = (pthread_t *) malloc(nHijos * sizeof(pthread_t));
+    dataInferior = (dataInferior**) malloc(nHijos * sizeof(dataInferior*));
 
     for(i=0;i<nHilos;i++){
         //Creacion de las estructuras de informacion para los nuevos threads
 
-        if (pthread_create( &mythread, NULL, thread_function, NULL/*Aqui va el contenido que le pasaremos*/)) {
-            printf("Error en la creacion ");
+        comunicadorHijos[i] = (dataInferior*) malloc(sizeof(dataInferior));
+
+        estado = pthread_create(
+                                &arregloHilos[i], NULL, hilosInferiores,
+                                comunicadorHijos[i]
+                                );
+
+        if (estado)) {
+            printf("Error en la creacion del hilo ");
             abort();
         }
     }
+
+    //join threads
+    for (i=0; i< NUM_THREADS;i++){
+        if (pthread_join(arregloHilos[i],NULL)){
+            printf("Error, no hice nada \n");
+        }
+    }
+
+    //Hacer un ciclo que tome la informacion de el arreglo
+
+    //Trabajar
+
+    //Liberar arreglo
 
 
 }
