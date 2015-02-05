@@ -7,10 +7,8 @@
 #include <time.h>
 #include "criptfunc.h"
 
-
 pthread_mutex_t hiloInf = PTHREAD_MUTEX_INITIALIZER;
-int nHilos;
-int longArchivo;
+
 
 typedef struct dataInferior{
     int idHilo;                      //Identificador del hilo Inferior
@@ -132,52 +130,20 @@ void *hilosMedios(void *arg){
 }
 
 void *hilosInferiores(void *arg){
-    int cotaInf,cotaSup;
-    dataInferior *dataArg;
-    char *contenidoActual;
-
-    dataArg = (*dataInferior) arg;
-
-    cotaInf = (*dataArg)->cotaInfString;
-    cotaSup = (*dataArg)->cotaSupString;
-
-    contenidoActual = (char *) calloc(cotaSup-cotaInf+2,sizeof(char))
-
-    
-
-    entrada = fopen(argv[3],"r");
-
-    fseek(entrada,cotaInf,SEEK_SET);
-    for(i=0;i<cotaSup-cotaInf+1;i++){
-        fread(&contenidoActual[i],1,1,entrada);
-        //printf("%c\n",contenidoActual[i]);
-        if  (strcmp(argv[1],"-c")==0) {
-            cesarizar(&contenidoActual[i]);
-        }
-        else if (strcmp(argv[1],"-d")==0){
-            desmurcielagisar(&contenidoActual[i]);
-        }
-    }
-    fseek(entrada, 0, SEEK_SET);
-
-    fclose(entrada);
-
-    (*dataArg)->string = entrada;
 
 }
+
+int nHilos;
+int longArchivo;
 
 int main(int argc, char const *argv[]){
     
     pthread_t *arregloHilos;
 
     int i;
-    int limInf;
 
     dataMedia **comunicadorHijos;
-
-    comunicadorHijos = (dataMedia**) malloc(nHilos * sizeof(dataMedia*));
-
-    
+    dataMedia = (dataMedia**) malloc(nHilos * sizeof(dataMedia*));
 
 
     FILE *salida;
@@ -191,15 +157,8 @@ int main(int argc, char const *argv[]){
     fseek(entrada, 0, SEEK_SET); // seek back to beginning of file
     fclose(entrada);
 
-    limtInf = 0;
-
     for(i=0;i<nHilos;i++){
         //Aqui creo las nuevas estructuras para cada thread
-        comunicadorHijos[i] = (comunicadorHijos*) malloc(sizeof(comunicadorHijos));
-
-        (*comunicadorHijos[i])->limite = limInf;
-
-        limInf +=  divRoundClosest(largoArchivo, nHilos);
 
         estado = pthread_create(
                         &arregloHilos[i], NULL, hilosInferiores,
@@ -225,7 +184,7 @@ int main(int argc, char const *argv[]){
         //Agregar al archivo el contenido de cada hijo finalizado siguiendo
         //el orden dado
         fprintf(salida,"%s", (*dataMedia[i])->string );
-        free ((*comunicadorHijos[i])->string);
+        free ((*dataMedia[i])->string);
 
     }
 
