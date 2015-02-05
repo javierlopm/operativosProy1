@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "criptfunc.h"
 
 /*Funcion que sustituye el truncado de c por redondeo hacia arriba*/
@@ -53,9 +54,6 @@ int main(int argc, char const *argv[])
             }
             // Codigo que ejecutaran los hijos para salir
             if (ramas == 0) {
-                //printf("Soy el hijo con pid %d y mi padre es: %d\n", getpid(),getppid());
-                //printf("Me cree como rama %d \n",getpid());
-                //sleep(5);
                 break;
             }
             else{

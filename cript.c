@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
+#include <time.h>
 #include "criptfunc.h"
 
 void imprimirCaracter(char *c){
