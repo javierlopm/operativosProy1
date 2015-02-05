@@ -11,7 +11,7 @@
 pthread_mutex_t hiloInf = PTHREAD_MUTEX_INITIALIZER;
 int nHilos;
 int longArchivo;
-char const *argv[];
+char *opcionCript,*strEntrada,*strSalida;
 
 /*Funcion que sustituye el truncado de c por redondeo hacia arriba*/
 int divRoundClosest(int n, int d)
@@ -53,16 +53,16 @@ void *hilosInferiores(void *arg){
 
     
 
-    entrada = fopen(argv[3],"r");
+    entrada = fopen(strEntrada,"r");
 
     fseek(entrada,cotaInf,SEEK_SET);
     for(i=0;i<cotaSup-cotaInf+1;i++){
         fread(&contenidoActual[i],1,1,entrada);
         //printf("%c\n",contenidoActual[i]);
-        if  (strcmp(argv[1],"-c")==0) {
+        if  (strcmp(opcionCript,"-c")==0) {
             cesarizar(&contenidoActual[i]);
         }
-        else if (strcmp(argv[1],"-d")==0){
+        else if (strcmp(opcionCript,"-d")==0){
             desmurcielagisar(&contenidoActual[i]);
         }
     }
@@ -161,8 +161,8 @@ void *hilosMedios(void *arg){
 
         //Realizamos el trabajo de criptografia sobre el texto modificado
         for(j=0;j<tam;j++){
-            if (strcmp(argv[1],"-c")==0) murcielagisar(&strLectura[i]);
-            else if (strcmp(argv[1],"-d")==0) descesarizar(&strLectura[i]);
+            if (strcmp(opcionCript,"-c")==0) murcielagisar(&strLectura[i]);
+            else if (strcmp(opcionCript,"-d")==0) descesarizar(&strLectura[i]);
         }
 
         if (i==0)strcpy(strSalida,strLectura);
@@ -176,7 +176,7 @@ void *hilosMedios(void *arg){
 
 
 
-int main(int argc, argv){
+int main(int argc, char *argv[]){
     
     pthread_t *arregloHilos;
 
@@ -184,19 +184,22 @@ int main(int argc, argv){
     int limInf;
     int estado;
 
-    FILE *entrada;
+    FILE *entrada,*salida;
 
     dataMedia **comunicadorHijos;
 
     comunicadorHijos = (dataMedia**) malloc(nHilos * sizeof(dataMedia*));
 
+    opcionCript = argv[1];
+    nHilos      = atoi(argv[2]);
+    strEntrada  = argv[3];
+    strSalida   = argv[4];
     
 
-
-    FILE *salida;
+    
 
     //Iniciamos tantos hilos como indique arg2
-    nHilos = atoi(argv[2]);
+    
 
     entrada = fopen(argv[3],"r");
     fseek(entrada, 0, SEEK_END); // seek to end of file
@@ -208,7 +211,7 @@ int main(int argc, argv){
 
     for(i=0;i<nHilos;i++){
         //Aqui creo las nuevas estructuras para cada thread
-        comunicadorHijos[i] = (comunicadorHijos*) malloc(sizeof(comunicadorHijos));
+        comunicadorHijos[i] = (dataMedia*) malloc(sizeof(comunicadorHijos));
 
         (comunicadorHijos[i])->limite = limInf;
 
@@ -225,7 +228,7 @@ int main(int argc, argv){
     }
 
 
-    salida = fopen(argv[4],"w");
+    salida = fopen(strSalida,"w");
 
     for (i=0; i< nHilos;i++){
         //Esperar por la finalizacion del primer thread
