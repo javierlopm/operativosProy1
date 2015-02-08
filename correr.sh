@@ -37,7 +37,7 @@ echo "Corriendo para archivo pruebaShort.txt"  >> $RESULTADO;
 
 for y in "_p" "_t";
 do
-    for z in 5 10;
+    for z in 2 3;
     do
         for x in {1..10};
         do  
