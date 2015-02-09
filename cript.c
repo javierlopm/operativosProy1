@@ -14,7 +14,7 @@
  */
 int main(int argc, char *argv[]) {
     clock_t tic = clock(); // contador inicial del tiempo de ejecucion
-    FILE *archivo;//*salida; // archivo de entrada y salida
+    FILE *archivo,*salida; // archivo de entrada y salida
     char *entrada;     // arreglo que contiene los caracteres del archivo de ent
     char *iterador;    // iterador sobre el arreglo de los caracteres de la ent.
     int i;             // contador
@@ -26,44 +26,44 @@ int main(int argc, char *argv[]) {
     largoArchivo = ftell(archivo); // obtiene el puntero actual en el archivo
     fseek(archivo, 0, SEEK_SET);   // regresa al inicio del archivo
 
-    //salida  = fopen(argv[3],"w");
+    salida  = fopen(argv[3],"w");
 
     entrada = (char*) malloc(sizeof(char)*(largoArchivo+1));
 
+
     // Para encriptar el archivo se llama a cesarizar y luego murcielagisar
     if(strcmp(argv[1],"-c")==0){
-        while (!feof(archivo)){
-            fscanf(archivo,"%s",entrada); 
+            while(fscanf(archivo,"%s",entrada)==1){ 
+            printf("Llegue a la primera linea\n");
             i = 0;
 
             while(i<strlen(entrada)){
-                iterador = &entrada[i];
+                *iterador = entrada[i];
                 cesarizar(iterador);
                 murcielagisar(iterador);
-                //fprintf(salida,"%s",iterador);
+                fprintf(salida,"%s",iterador);
                 i++;
             }
 
             
         }
-        //fclose(salida);
+        fclose(salida);
     }
     else if(strcmp(argv[1],"-d")==0){
-        while (!feof(archivo)){
-            fscanf(archivo,"%s",entrada); 
+        
+            while(fscanf(archivo,"%s",entrada)==1){ 
             i = 0;
 
             while(i<strlen(entrada)){
-                iterador = &entrada[i];
+                *iterador = entrada[i];
                 desmurcielagisar(iterador);
                 descesarizar(iterador);
-                //fprintf(salida,"%s",iterador);
+                fprintf(salida,"%s",iterador);
                 i++;
             }
 
-            
         }
-        //fclose(salida);
+        fclose(salida);
     }
 
 
