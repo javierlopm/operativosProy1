@@ -30,7 +30,7 @@ do
     echo -n "   cript tam:" >> $RESULTADO;
     ./cript -c pruebaLongLong.txt encriptado.txt >> $RESULTADO;
     echo -n "   decript" >> $RESULTADO;
-    ./cript -d encriptado.txt desencriptado.txt  >> $RESULTADO;
+    ./cript -d pruebaLongLong.txt desencriptado.txt  >> $RESULTADO;
 done
 
 echo "Corriendo para archivo pruebaShort.txt"  >> $RESULTADO;
@@ -56,6 +56,6 @@ do
     echo -n "   cript tam:" >> $RESULTADO;
     ./cript -c pruebaShort.txt encriptado.txt >> $RESULTADO;
     echo -n "   decript" >> $RESULTADO;
-    ./cript -d encriptado.txt desencriptado.txt  >> $RESULTADO;
+    ./cript -d pruebaShort.txt desencriptado.txt  >> $RESULTADO;
 done
 

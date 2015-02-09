@@ -19,12 +19,20 @@ int main(int argc, char *argv[])
 {
 	clock_t tic = clock(); // contador inicial del tiempo de ejecucion
     FILE *archivo,*salida;         // archivo de entrada y salida
-    char entrada[255];     // arreglo que contiene los caracteres del archivo de entrada    -----------------------------Hacer con memoria dinamica
+    char *entrada;     // arreglo que contiene los caracteres del archivo de entrada    -----------------------------Hacer con memoria dinamica
     char *iterador;        // iterador sobre el arreglo de los caracteres de la entrada
     int i;				   // contador
+    int largoArchivo;
  
     archivo = fopen(argv[2],"r");
+
+    fseek(archivo, 0, SEEK_END);   // busca el final del archivo
+    largoArchivo = ftell(archivo); // obtiene el puntero actual en el archivo
+    fseek(archivo, 0, SEEK_SET);   // regresa al inicio del archivo
+
     salida  = fopen(argv[3],"w");
+
+    entrada = (char*) malloc(sizeof(char)*(largoArchivo+1));
 
     // Para encriptar el archivo se llama a cesarizar y luego murcielagisar
     if(strcmp(argv[1],"-c")==0){
@@ -44,14 +52,11 @@ int main(int argc, char *argv[])
         }
         fclose(salida);
     }
-
-
- 	
- 	// Para desencriptar el archivo se llama a desmurcielagisar y luego descesarizar
-    if(strcmp(argv[1],"-d")==0){
+    else if(strcmp(argv[1],"-d")==0){
         while (!feof(archivo)){
             fscanf(archivo,"%s",entrada); 
             i = 0;
+
             while(i<strlen(entrada)){
                 iterador = &entrada[i];
                 desmurcielagisar(iterador);
@@ -59,12 +64,15 @@ int main(int argc, char *argv[])
                 fprintf(salida,"%s",iterador);
                 i++;
             }
+
             
         }
-        //printf("\n");
         fclose(salida);
     }
- 
+
+
+ 	
+ 	free(entrada);
     fclose(archivo);
 
     clock_t toc = clock(); // contador final del tiempo de ejecucion

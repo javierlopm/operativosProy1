@@ -19,13 +19,12 @@ int main(int argc, char const *argv[])
 {
     clock_t tic = clock(); // contador inicial del tiempo de ejecucion
     pid_t ramas,hojas;     // id de los procesos para las ramas y hojas
-    int i,j,nHijos,cotaInfRamas,cotaSupRamas,cotaInfHojas; /* enteros   i: contador 
-                                                                        j: contador
-                                                                        nHijos: numero de hijos del proceso
-                                                                        cotaInfRamas: cota inferior para dividir los archivos de las ramas
-                                                                        cotaSupRamas: cota superior para dividir los archivos de las ramas
-                                                                        cotaInfHojas: cota infrior para dividir los archivos de las hojas
-                                                            */
+    int i,j;               //Contadores
+    int nHijos;            //numero de hijos del proceso
+    int cotaInfRamas;      //cota inferior para dividir los archivos de las ramas
+    int cotaSupRamas;      //cota superior para dividir los archivos de las ramas
+    int cotaInfHojas;      //cota inferior para apsar a cada rama 
+                                                            
     int cotaSupHojas,largoArchivo,nArchHojas,nArchRamas;    /*  enteros:    cotaSupHojas: cota superior para dividir los archivos de las hojas
                                                                             largoArchivo: largo del archivo actual
                                                                             nArchHojas: numero de archivos de las hojas
@@ -100,7 +99,10 @@ int main(int argc, char const *argv[])
             if (hojas == 0){
 
 
-                contenidoActual = (char *) calloc(cotaSupHojas-cotaInfHojas+2,sizeof(char));
+                contenidoActual = (char *) calloc(
+                                                    cotaSupHojas-cotaInfHojas+2,
+                                                    sizeof(char)
+                                                 );
 
                 entrada = fopen(argv[3],"r");
 
