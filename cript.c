@@ -7,21 +7,17 @@
 
 // Implementacion secuencial para el encriptado/desencriptado de archivos 
 
-int main(int argc, char *argv[])
-    /*  Funcion principal
-        Parametros:
-            argc: entero que indica numero de comandos en la linea de argumentos
-            argv: arreglo que contiene los argumentos
-        
-        Devuelve nada
-    */    
-
-{
-	clock_t tic = clock(); // contador inicial del tiempo de ejecucion
-    FILE *archivo,*salida;         // archivo de entrada y salida
-    char *entrada;     // arreglo que contiene los caracteres del archivo de entrada    -----------------------------Hacer con memoria dinamica
-    char *iterador;        // iterador sobre el arreglo de los caracteres de la entrada
-    int i;				   // contador
+/*  Funcion principal
+ *   Parametros:
+ *       argc: entero que indica numero de comandos en la linea de argumentos
+ *       argv: arreglo que contiene los argumentos
+ */
+int main(int argc, char *argv[]) {
+    clock_t tic = clock(); // contador inicial del tiempo de ejecucion
+    FILE *archivo;//*salida; // archivo de entrada y salida
+    char *entrada;     // arreglo que contiene los caracteres del archivo de ent
+    char *iterador;    // iterador sobre el arreglo de los caracteres de la ent.
+    int i;             // contador
     int largoArchivo;
  
     archivo = fopen(argv[2],"r");
@@ -30,7 +26,7 @@ int main(int argc, char *argv[])
     largoArchivo = ftell(archivo); // obtiene el puntero actual en el archivo
     fseek(archivo, 0, SEEK_SET);   // regresa al inicio del archivo
 
-    salida  = fopen(argv[3],"w");
+    //salida  = fopen(argv[3],"w");
 
     entrada = (char*) malloc(sizeof(char)*(largoArchivo+1));
 
@@ -44,13 +40,13 @@ int main(int argc, char *argv[])
                 iterador = &entrada[i];
                 cesarizar(iterador);
                 murcielagisar(iterador);
-                fprintf(salida,"%s",iterador);
+                //fprintf(salida,"%s",iterador);
                 i++;
             }
 
             
         }
-        fclose(salida);
+        //fclose(salida);
     }
     else if(strcmp(argv[1],"-d")==0){
         while (!feof(archivo)){
@@ -61,18 +57,18 @@ int main(int argc, char *argv[])
                 iterador = &entrada[i];
                 desmurcielagisar(iterador);
                 descesarizar(iterador);
-                fprintf(salida,"%s",iterador);
+                //fprintf(salida,"%s",iterador);
                 i++;
             }
 
             
         }
-        fclose(salida);
+        //fclose(salida);
     }
 
 
- 	
- 	free(entrada);
+    
+    free(entrada);
     fclose(archivo);
 
     clock_t toc = clock(); // contador final del tiempo de ejecucion

@@ -12,8 +12,6 @@
  *   Parametros:
  *       argc: entero que indica numero de comandos en la linea de argumentos
  *       argv: arreglo que contiene los argumentos
- *   
- *   Devuelve nada
  */
 int main(int argc, char const *argv[]){
     clock_t tic = clock(); // contador inicial del tiempo de ejecucion
@@ -29,10 +27,10 @@ int main(int argc, char const *argv[]){
     int nArchHojas;     //contador de archivo para hojas
     int nArchRamas;     //contador de archivo para ramas
 
-    char *nombreArchivo;    //apuntador al nombre del archivo actual
-    int  *aux;              //apuntador auxiliar
-    int  *contenidoActual;  //arreglo aux para contenido de encript/dec. actual
-    int  *token;            //contiene los segmentos de contenido actual
+    char  *nombreArchivo;    //apuntador al nombre del archivo actual
+    char  *aux;              //apuntador auxiliar
+    char  *contenidoActual;  //arreglo aux para contenido de encript/dec. actual
+    char  *token;            //contiene los segmentos de contenido actual
 
                                                             
     FILE *escritor,*entrada;  //Archivo de salida y entrada respectivamente
@@ -65,7 +63,8 @@ int main(int argc, char const *argv[]){
                 break;
             }
             else{
-                // Se determina el numero de archivos correspondiente para cada rama
+                // Se determina el numero de archivos correspondiente para 
+                // cada rama
                 cotaInfRamas  = cotaSupRamas + 1;
                 cotaSupRamas += largoArchivo/nHijos;
                 nArchRamas   ++;
@@ -88,7 +87,9 @@ int main(int argc, char const *argv[]){
                 else{
                     // Se define el numero de archivo de cada hijo y las cotas
                     cotaInfHojas  = cotaSupHojas + 1;
-                    cotaSupHojas += divRoundClosest(largoArchivo,(nHijos * nHijos));
+                    cotaSupHojas += divRoundClosest(
+                                                  largoArchivo,(nHijos * nHijos)
+                                                   );
                     if (cotaSupHojas > largoArchivo) cotaSupHojas = largoArchivo;
                     nArchHojas   ++;
                 }
@@ -178,7 +179,7 @@ int main(int argc, char const *argv[]){
 
                     fprintf(escritor,"%s",contenidoActual);
 
-                    remove(nombreArchivo);
+                    remove(nombreArchivo); //Remueve el archivo y libera mem
                     fclose(entrada);
                     
                     free(nombreArchivo);
@@ -221,7 +222,7 @@ int main(int argc, char const *argv[]){
                 remove(nombreArchivo);
     
                 fclose(entrada);
-
+                free(contenidoActual);
                 free(nombreArchivo);
             
             }

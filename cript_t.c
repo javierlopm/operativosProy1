@@ -8,17 +8,12 @@
 #include "criptfunc.h"  // Contiene los algoritmos: cesarizar,murcielagisar,descesarizar, desmurcielagisar
 
 // Implementacion con hilos para el encriptado/desencriptado de archivos 
-
-pthread_mutex_t hiloInf = PTHREAD_MUTEX_INITIALIZER; // inicializacion
-char opcionCript[30],strEntrada[30],strSalida[30];   /* caracteres  opcionCript: contiene argumento -c o -d
-                                                                    strEntrada: archivo de entrada
-                                                                    strSalida: archivo de salida
-                                                    */
-
+char opcionCript[30];   // contiene argumento -c o -d
+char strEntrada[30];    // archivo de entrada
+char strSalida[30];     // archivo de salida
 
 
 typedef struct dataInferior{
-    int idHilo;                      // Identificador del hilo Inferior
     int cotaInfString,cotaSupString; // Posiciones entre las que leera el arch
     int tamString;                   // Tam real sin espacios del string modif.
     int longArchivo;                 // longitud del archivo
@@ -27,7 +22,6 @@ typedef struct dataInferior{
 }dataInferior;
 
 typedef struct dataMedia{
-    int idHilo;               // Identificador del hilo Medio
     int limite;               // limites de trabajo de los hilos
     int longArchivo;          // longitud del archivo actual
     int nHilos;               // numero de hilos
