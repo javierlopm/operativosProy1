@@ -1,36 +1,51 @@
-#include <stdio.h>
+
+//Funciones para encriptar y desencriptar archivos
 
 void cesarizar(char *c){
+	/*  Funcion que cambia un caracter por los dos que le siguen en el alfabeto. 
+		En el caso de la 'y' cambia a 'a' y la 'z' cambia a 'b'.
+		Parametros:
+			c: caracter a ser cambiado 
+
+		Devuelve nada
+	*/
     if (*c == 121){
         *c = 'a';
-        //printf("%s",c);
     }
     else if (*c == 0x7A){
         *c = 'b';
-        //printf("%s",c);
     }
     else{
         *c = *c + 2;
-        //printf("%s",c);
     }
 }
 
 void descesarizar(char *c){
+	/*  Funcion que cambia un caracter por los dos que le anteceden en el alfabeto. 
+		En el caso de la 'a' cambia a 'y' y la 'b' cambia a 'z'.
+		Parametros:
+			c: caracter a ser cambiado
+
+		Devuelve nada 
+	*/
     if (*c == 97){
         *c = 'y';
-        //printf("%s",c);
     }
     else if (*c == 98){
         *c = 'z';
-        //printf("%s",c);
     }
     else{
         *c = *c - 2;
-        //printf("%s",c);
     }
 }
 
 void murcielagisar(char *c){
+	/*  Funcion que cambia los caracteres 'm,u,r,c,i,e,l,a,g,o' por '0,1,2,3,4,5,6,7,8,9' respectivamente.
+		Parametros:
+			c: caracter a ser cambiado 
+
+		Devuelve nada
+	*/
     switch(*c){
         case 'm':
             *c = 0x30;
@@ -63,10 +78,15 @@ void murcielagisar(char *c){
             *c = 0x39;
             break;
     }
-    //printf("en %c \n",c);
 }
 
 void desmurcielagisar(char *c){
+	/*  Funcion que cambia los numeros '0,1,2,3,4,5,6,7,8,9' por 'm,u,r,c,i,e,l,a,g,o' por  respectivamente.
+		Parametros:
+			c: caracter a ser cambiado 
+
+		Devuelve nada
+	*/
     switch(*c){
         case 48:
             *c = 'm';
@@ -99,4 +119,17 @@ void desmurcielagisar(char *c){
             *c = 'o';
             break;
     }
+}
+
+int divRoundClosest(int n, int d)
+	/*	Funcion que sustituye el truncado que usa c en division entera por redondeo hacia arriba
+		Parametros:
+		n: entero a dividir
+		d: entero divisor
+
+		Devuelve un entero
+	*/
+
+{
+  return ((n < 0) ^ (d < 0)) ? ((n - d/2)/d) : ((n + d/2)/d);
 }
