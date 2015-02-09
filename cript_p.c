@@ -14,7 +14,7 @@
  *       argv: arreglo que contiene los argumentos
  */
 int main(int argc, char const *argv[]){
-    clock_t tic = clock(); // contador inicial del tiempo de ejecucion
+    int tic = Tomar_Tiempo(); // contador inicial del tiempo de ejecucion
     pid_t ramas,hojas;     // id de los procesos para las ramas y hojas
     int i,j;               //Contadores
     int nHijos;            //numero de hijos del proceso
@@ -229,7 +229,7 @@ int main(int argc, char const *argv[]){
             
             fclose(escritor);
         
-        clock_t toc = clock(); // contador final del tiempo de ejecucion
+        int toc = Tomar_Tiempo(); // contador final del tiempo de ejecucion
         printf("Tiempo de ejecucion: %f segundos\n",(double)(toc-tic)/ CLOCKS_PER_SEC);
         }
     

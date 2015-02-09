@@ -1,3 +1,7 @@
+#include <stdlib.h> 
+#include <math.h>
+#include <stdio.h>
+#include <sys/time.h>
 
 //Funciones para encriptar y desencriptar archivos
 
@@ -133,3 +137,12 @@ int divRoundClosest(int n, int d)
 {
   return ((n < 0) ^ (d < 0)) ? ((n - d/2)/d) : ((n + d/2)/d);
 }
+
+int Tomar_Tiempo()
+{
+  struct timeval t;     /* usado para tomar los tiempos */
+  int dt;
+  gettimeofday ( &t, (struct timezone*)0 );
+  dt = (t.tv_sec)*1000000 + t.tv_usec;
+  return dt;
+}                              

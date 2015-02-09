@@ -197,7 +197,7 @@ int main(int argc, char const *argv[]){
         Devuelve nada
     */    
 
-    clock_t tic = clock(); // contador inicial del tiempo de ejecucion
+    int tic = Tomar_Tiempo(); // contador inicial del tiempo de ejecucion
     pthread_t *arregloHilos; // arreglo de hilos
 
     int i; // contador
@@ -283,7 +283,7 @@ int main(int argc, char const *argv[]){
     }
     fclose(salida);
 
-    clock_t toc = clock(); // contador final del tiempo de ejecucion
+    int toc = Tomar_Tiempo(); // contador final del tiempo de ejecucion
     printf("Tiempo de ejecucion: %f segundos\n",(double)(toc-tic)/ CLOCKS_PER_SEC);
         
 }
