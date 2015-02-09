@@ -4,40 +4,38 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "criptfunc.h" // Contiene los algoritmos: cesarizar,murcielagisar,descesarizar, desmurcielagisar
+#include "criptfunc.h" // Biblioteca de funciones propias
 
 // Implementacion con procesos para el encriptado/desencriptado de archivos 
 
-int main(int argc, char const *argv[])
-    /*  Funcion principal
-        Parametros:
-            argc: entero que indica numero de comandos en la linea de argumentos
-            argv: arreglo que contiene los argumentos
-        
-        Devuelve nada
-    */
-{
+/*  Funcion principal
+ *   Parametros:
+ *       argc: entero que indica numero de comandos en la linea de argumentos
+ *       argv: arreglo que contiene los argumentos
+ *   
+ *   Devuelve nada
+ */
+int main(int argc, char const *argv[]){
     clock_t tic = clock(); // contador inicial del tiempo de ejecucion
     pid_t ramas,hojas;     // id de los procesos para las ramas y hojas
     int i,j;               //Contadores
     int nHijos;            //numero de hijos del proceso
-    int cotaInfRamas;      //cota inferior para dividir los archivos de las ramas
-    int cotaSupRamas;      //cota superior para dividir los archivos de las ramas
-    int cotaInfHojas;      //cota inferior para apsar a cada rama 
+    int cotaInfRamas;     //cota inferior para dividir los archivos de las ramas
+    int cotaSupRamas;     //cota superior para dividir los archivos de las ramas
+    int cotaInfHojas;     //cota inferior para apsar a cada rama 
                                                             
-    int cotaSupHojas,largoArchivo,nArchHojas,nArchRamas;    /*  enteros:    cotaSupHojas: cota superior para dividir los archivos de las hojas
-                                                                            largoArchivo: largo del archivo actual
-                                                                            nArchHojas: numero de archivos de las hojas
-                                                                            nArchRamas: numero de archivos de las ramas
-                                                            */
-    char *nombreArchivo, *aux,*contenidoActual,*token;      /* caracteres:  nombreArchivo: apuntador al nombre del archivo actual
-                                                                            aux: apuntador auxiliar
-                                                                            contenidoActual: arreglo que contiene el contenido del archivo actual
-                                                                            token: contiene los segmentos de contenido actual
-                                                            */
-    FILE *escritor,*entrada;                                /* archivos:    escritor: archivo a escribir
-                                                                            entrada: archivo a leer
-                                                            */
+    int cotaSupHojas;   //cota superior para dividir los archivos de las hojas
+    int largoArchivo;   //largo del archivo actual
+    int nArchHojas;     //contador de archivo para hojas
+    int nArchRamas;     //contador de archivo para ramas
+
+    char *nombreArchivo;    //apuntador al nombre del archivo actual
+    int  *aux;              //apuntador auxiliar
+    int  *contenidoActual;  //arreglo aux para contenido de encript/dec. actual
+    int  *token;            //contiene los segmentos de contenido actual
+
+                                                            
+    FILE *escritor,*entrada;  //Archivo de salida y entrada respectivamente
 
     nHijos = atoi(argv[2]); // conversion a entero
 
@@ -88,7 +86,7 @@ int main(int argc, char const *argv[])
                     break;
                 }
                 else{
-                    // Se determina el numero de archivos correspondiente para cada hoja
+                    // Se define el numero de archivo de cada hijo y las cotas
                     cotaInfHojas  = cotaSupHojas + 1;
                     cotaSupHojas += divRoundClosest(largoArchivo,(nHijos * nHijos));
                     if (cotaSupHojas > largoArchivo) cotaSupHojas = largoArchivo;
@@ -110,11 +108,11 @@ int main(int argc, char const *argv[])
                 for(i=0;i<cotaSupHojas-cotaInfHojas+1;i++){
                     fread(&contenidoActual[i],1,1,entrada);
 
-                    // Las hojas se encargan de cesarizar en el encriptado de texto
+                    // Las hojas realizan cesarizar en el encriptado de texto
                     if  (strcmp(argv[1],"-c")==0) {
                         cesarizar(&contenidoActual[i]);
                     }
-                    // Las hojas se encargan de desmurcielagisar en el desencriptado de texto
+                    // Las hojas ejecutan desmurcielagisar en el desencriptado
                     else if (strcmp(argv[1],"-d")==0){
                         desmurcielagisar(&contenidoActual[i]);
                     }
@@ -138,7 +136,8 @@ int main(int argc, char const *argv[])
                 exit(0);
             }
 
-            // Si el proceso es una rama, espera por sus hojas (hijos) y une los archivos creados por ellas
+            // Si el proceso es una rama, espera por sus hojas (hijos) y une 
+            //los archivos creados por ellas
             else{   
 
                 for(i=0; i < nHijos;i++) wait();
@@ -149,7 +148,7 @@ int main(int argc, char const *argv[])
                 
                 free(nombreArchivo);
     
-                // Crea los nombres de los archivos que seran creados por los procesos
+                // Crea los nombres de los archivos que que los proc. crearan
                 for(i=0;i<nHijos;i++){
                     nombreArchivo = (char *) calloc(3,sizeof(char));
                     nombreArchivo[0] = (char) (nArchRamas + 0x30);
@@ -159,19 +158,19 @@ int main(int argc, char const *argv[])
     
                     largoArchivo = 0;
                     fseek(entrada, 0, SEEK_END);   // busca el final del archivo
-                    largoArchivo = ftell(entrada); // obtiene el puntero actual en el archivo
-                    fseek(entrada, 0, SEEK_SET);   // regresa al inicio del archivo
+                    largoArchivo = ftell(entrada); // ap. final del archivo
+                    fseek(entrada, 0, SEEK_SET);   // regresa al inicio
                     
                     contenidoActual = (char *) calloc(largoArchivo+1,sizeof(char));
 
                     fscanf(entrada,"%s",contenidoActual);
     
                     for (j = 0; j < largoArchivo; j++){
-                        // Las ramas se encargan de murcielagisar en el encriptado de texto
+                        // Ramas aplican murcielagisar en el encriptado de texto
                         if (strcmp(argv[1],"-c")==0) {
                             murcielagisar(&contenidoActual[j]);
                         }
-                        // Las ramas se encargan de descesarizar en el desencriptado de texto
+                        // Ramas aplican descesarizar en el desencript. de texto
                         else if(strcmp(argv[1],"-d")==0){
                             descesarizar(&contenidoActual[j]);
                         }
@@ -203,10 +202,11 @@ int main(int argc, char const *argv[])
 
                 entrada = fopen( nombreArchivo,"r");
                 
+                //Calculo de longitud de entrada
                 largoArchivo = 0;
-                fseek(entrada, 0, SEEK_END);   // sbusca el final del archivo
-                largoArchivo = ftell(entrada); // obtiene el puntero actual del archivo
-                fseek(entrada, 0, SEEK_SET);   // regresa al inicio del archivo
+                fseek(entrada, 0, SEEK_END);   
+                largoArchivo = ftell(entrada); 
+                fseek(entrada, 0, SEEK_SET);   
                 
                 contenidoActual = (char *) calloc(largoArchivo+1,sizeof(char));
 

@@ -3,7 +3,7 @@
 #include <locale.h>
 #include <string.h>
 #include <time.h>
-#include "criptfunc.h" // Contiene los algoritmos: cesarizar,murcielagisar,descesarizar, desmurcielagisar
+#include "criptfunc.h" // Biblioteca de funciones propias
 
 // Implementacion secuencial para el encriptado/desencriptado de archivos 
 
