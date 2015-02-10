@@ -15,9 +15,10 @@ do
     do
         for x in {1..10};
         do  
-            echo -n "prueba "$x" cript"$y" -c" $z" "  >> $RESULTADO;
+            echo "prueba " $x >> $RESULTADO;
+            echo  "cript"$y" -c" $z" "  >> $RESULTADO;
             ./cript$y -c $z pruebaLongLong.txt encriptado.txt >> $RESULTADO;
-            echo -n "         cript"$y" -d" $z" "  >> $RESULTADO;
+            echo  "cript"$y" -d" $z"       "  >> $RESULTADO;
             ./cript$y -d $z encriptado.txt desencriptado.txt  >> $RESULTADO;
             echo " " >> $RESULTADO;
         done
@@ -26,7 +27,7 @@ done
 
 for x in {1..10};
 do  
-    echo $x >> $RESULTADO;
+    echo "prueba " $x >> $RESULTADO;
     echo -n "   cript tam:" >> $RESULTADO;
     ./cript -c pruebaLongLong.txt encriptado.txt >> $RESULTADO;
     echo -n "   decript" >> $RESULTADO;
@@ -41,9 +42,10 @@ do
     do
         for x in {1..10};
         do  
-            echo -n "prueba "$x" cript"$y" -c" $z" "  >> $RESULTADO;
+            echo "prueba " $x;
+            echo  "cript"$y" -c" $z" "  >> $RESULTADO;
             ./cript$y -c $z pruebaShort.txt encriptado.txt >> $RESULTADO;
-            echo -n "         cript"$y" -d" $z" "  >> $RESULTADO;
+            echo  "cript"$y" -d" $z"       "  >> $RESULTADO;
             ./cript$y -d $z encriptado.txt desencriptado.txt  >> $RESULTADO;
             echo " " >> $RESULTADO;
         done
@@ -52,7 +54,7 @@ done
 
 for x in {1..10};
 do  
-    echo $x >> $RESULTADO;
+    echo "prueba " $x >> $RESULTADO;
     echo -n "   cript tam:" >> $RESULTADO;
     ./cript -c pruebaShort.txt encriptado.txt >> $RESULTADO;
     echo -n "   decript" >> $RESULTADO;
