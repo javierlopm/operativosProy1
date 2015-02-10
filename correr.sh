@@ -16,9 +16,9 @@ do
         for x in {1..10};
         do  
             echo "prueba " $x >> $RESULTADO;
-            echo  "cript"$y" -c" $z" "  >> $RESULTADO;
+            echo -n "cript"$y" -c" $z" "  >> $RESULTADO;
             ./cript$y -c $z pruebaLongLong.txt encriptado.txt >> $RESULTADO;
-            echo  "cript"$y" -d" $z"       "  >> $RESULTADO;
+            echo -n "cript"$y" -d" $z"       "  >> $RESULTADO;
             ./cript$y -d $z encriptado.txt desencriptado.txt  >> $RESULTADO;
             echo " " >> $RESULTADO;
         done
@@ -42,10 +42,10 @@ do
     do
         for x in {1..10};
         do  
-            echo "prueba " $x;
-            echo  "cript"$y" -c" $z" "  >> $RESULTADO;
+            echo "prueba " $x >> $RESULTADO;
+            echo -n "cript"$y" -c" $z" "  >> $RESULTADO;
             ./cript$y -c $z pruebaShort.txt encriptado.txt >> $RESULTADO;
-            echo  "cript"$y" -d" $z"       "  >> $RESULTADO;
+            echo -n "cript"$y" -d" $z"       "  >> $RESULTADO;
             ./cript$y -d $z encriptado.txt desencriptado.txt  >> $RESULTADO;
             echo " " >> $RESULTADO;
         done

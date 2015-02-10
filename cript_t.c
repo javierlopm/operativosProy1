@@ -8,12 +8,18 @@
 #include "criptfunc.h"  // Contiene los algoritmos: cesarizar,murcielagisar,descesarizar, desmurcielagisar
 
 // Implementacion con hilos para el encriptado/desencriptado de archivos 
-char opcionCript[30];   // contiene argumento -c o -d
-char strEntrada[30];    // archivo de entrada
-char strSalida[30];     // archivo de salida
+
+
+/*  caracteres  opcionCript: contiene argumento -c o -d
+    strEntrada: archivo de entrada
+    strSalida: archivo de salida
+*/
+char opcionCript[30],strEntrada[30],strSalida[30];   
+
 
 
 typedef struct dataInferior{
+    int idHilo;                      // Identificador del hilo Inferior
     int cotaInfString,cotaSupString; // Posiciones entre las que leera el arch
     int tamString;                   // Tam real sin espacios del string modif.
     int longArchivo;                 // longitud del archivo
@@ -22,6 +28,7 @@ typedef struct dataInferior{
 }dataInferior;
 
 typedef struct dataMedia{
+    int idHilo;               // Identificador del hilo Medio
     int limite;               // limites de trabajo de los hilos
     int longArchivo;          // longitud del archivo actual
     int nHilos;               // numero de hilos
@@ -197,7 +204,7 @@ int main(int argc, char const *argv[]){
         Devuelve nada
     */    
 
-    int tic = Tomar_Tiempo(); // contador inicial del tiempo de ejecucion
+    clock_t tic = clock(); // contador inicial del tiempo de ejecucion
     pthread_t *arregloHilos; // arreglo de hilos
 
     int i; // contador
@@ -283,7 +290,7 @@ int main(int argc, char const *argv[]){
     }
     fclose(salida);
 
-    int toc = Tomar_Tiempo(); // contador final del tiempo de ejecucion
+    clock_t toc = clock(); // contador final del tiempo de ejecucion
     printf("Tiempo de ejecucion: %f segundos\n",(double)(toc-tic)/ CLOCKS_PER_SEC);
         
 }
